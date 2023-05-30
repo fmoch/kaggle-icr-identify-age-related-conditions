@@ -30,9 +30,8 @@ icr-identify-age-related-conditionsコンペのリポジトリ
 $Log Loss= \frac{-\frac{1}{𝑁_0}\sum_{i=1}^{N_0}\log{𝑝_{0𝑖}}−\frac{1}{𝑁_1}\sum_{i=1}^{N_1}\log{𝑝_{1𝑖}}}{2}$
 
 
-ここで、(N_{c})はクラス(c)のオブザベーション数、(˶‾‾)は自然対数、(y_{c i})はオブザベーション(i)がクラス(c)に属していれば1、それ以外は0、(p_{c i})はオブザベーション(i)がクラス(c)に属しているという予想確率です。
-与えられた行の提出された確率は、スコアリングされる前に再スケーリングされるため、合計が1になる必要はありません（各行は行の合計で割られます）。対数関数の極値を避けるため、各予測確率ᑝは、max(min(σ))
- は max(min(ᵅ,1-10-15),10-15) に置き換えられる。
+ここで、`(N_{c})`はクラス(c)のオブザベーション数、((\log))は自然対数、(y_{c i})はオブザベーション(i)がクラス(c)に属していれば1、それ以外は0、(p_{c i})はオブザベーション(i)がクラス(c)に属しているという予想確率です。
+与えられた行の提出された確率は、スコアリングされる前に再スケーリングされるため、合計が1になる必要はありません（各行は行の合計で割られます）。対数関数の極値を避けるため、各予測確率は、max(min(σ))は max(min(ᵅ,1-10-15),10-15) に置き換えられる。
 - 提出ファイル
 テストセットの各IDについて、2つのクラスのそれぞれの確率を予測する必要があります。ファイルはヘッダを含み、以下の形式でなければならない：
 ```
@@ -45,98 +44,69 @@ ID,class_0,class_1
 ```
 
 ## Timeline
-- 2023年2月16日 - 開始日。
-- 2023年5月11日 エントリー締切。出場するためには、この日までに競技規則を承諾する必要があります。
-- 2023年5月11日 - チーム合併の締切日です。この日が、参加者がチームに参加したり、合併したりできる最後の日です。
-- 2023年5月18日 - 最終提出期限。
-- すべての締め切りは、特に断りのない限り、該当日の午後11時59分（UTC）になります。主催者が必要と判断した場合、コンテストのタイムラインを更新する権利を有します。
+- 2023年5月11日 - 開始日
+- 2023年8月3日 -エントリー締切。出場するには、この日までに競技規則に同意する必要があります。
+- 2023年8月3日 - チーム合併の締切日。この日が、参加者がチームに参加したり合併したりできる最後の日です
+- 2023年8月10日 - 最終提出締切日。
 
 ## Data
-### データセット説明
-- このコンペティションの目的は、タンパク質の存在量データを用いてパーキンソン病（PD）の経過を予測することです。PDに関与するタンパク質の完全なセットは、まだ未解決の研究課題であり、予測価値を持つタンパク質は、さらに調査する価値があると思われます。このデータセットの中核は、数百人の患者から収集した脳脊髄液（CSF）サンプルの質量分析から得られたタンパク質存在量値です。各患者は、PDの重症度評価を行いながら、複数年にわたり複数のサンプルを提供しました。
-- 時系列コードのコンペティションです。テストセットのデータを受け取り、Kaggleの時系列APIを使って予測を行っていただきます。
-<br>
+競技データは、3つの年齢関連疾患に関連する50以上の匿名化された健康特性で構成されています。目標は、被験者がこれらの疾患のいずれかに罹っているかいないかを予測することである（二値分類問題）。
 
-## ファイル
--  train_peptides.csv 
-- train_proteins.csv
-- train_clinical_data.csv
-- supplemental_clinical_data.csv 
+なお、これはコードコンペティションであり、実際のテストセットは隠されている。このバージョンでは、解答を作成するのに役立つように、正しい形式のサンプルデータをいくつか提供します。あなたの提出物が採点されるとき、このサンプルテストデータはフルテストセットに置き換えられます。完全なテストセットには、約400行があります。
 
-### train_peptides.csv 
-- ペプチドレベルの質量分析データです。ペプチドはタンパク質の構成サブユニットである。
+- **train.csv** - The training set.
+- **test.csv** - The test set. 
+- **greeks.csv** - 補足的なメタデータ。トレーニングセットでのみ利用可能。
+- **sample_submission.csv**
 
+### train.csv 
 |カラム名|説明|
 |----|---- |
-|visit_id | 訪問のIDコード。|
-|visit_month | 患者の最初の訪問から相対的に見た、訪問の月。|
-|patient_id | 患者のIDコード。|
-|UniProt | 関連するタンパク質のUniProt IDコード。1つのタンパク質に複数のペプチドが存在することが多い。|
-|Peptide | ペプチドに含まれるアミノ酸の配列。関連するコードについては、この表を参照してください。稀なアノテーションは、この表に含まれない場合もある。テストセットには、トレーニングセットに含まれていないペプチドが含まれることがあります。|
-|PeptideAbundance | サンプルに含まれるアミノ酸の頻度です。|
+|id| 各オブザベーションの一意な識別子|
+|AB-GL|56個の匿名化された健康特性。EJはカテゴリーであるが、それ以外はすべて数値である。|
+|class|バイナリターゲット：1は、被験者が3つの条件のうちの1つと診断されたことを示し、0は、診断されていないことを示す|
 
-### train_proteins.csv
-- ペプチドレベルのデータから集約したタンパク質発現頻度。
 
+### greek.csv
 |カラム名|説明|
 |----|---- |
-|visit_id | 訪問のIDコード。|
-|visit_month | 患者の最初の訪問から相対的に見た、訪問の月。|
-|patient_id | 患者のIDコード。|
-|UniProt | 関連するタンパク質のUniProt IDコード。1つのタンパク質につき数個のペプチドが存在することが多い。テストセットには、トレーニングセットに含まれていないタンパク質が含まれる場合がある。|
-|NPX | Normalized protein expression（正規化タンパク質発現量）。サンプルに含まれるタンパク質の出現頻度。ペプチドを繰り返し含むタンパク質もあるため、構成ペプチドと1対1の関係にはない可能性があります。|
+|Alpha|年齢に関連する状態がある場合、その種類を特定する。|
+|A|年齢に関連した状態はない。クラス0に対応する。|
+|B, D, G|3つの加齢に関連した状態。クラス 1 に対応する。|
+|Beta, Gamma, Delta|3つの実験特性を示す。|
+|Epsilon|この被験者のデータが収集された日付。なお、テストセットのデータはすべてトレーニングセットが収集された後に収集されたものである。|
 
-### train_clinical_data.csv
-|カラム名|説明|
-|----|----| 
-|visit_id | 訪問のIDコード。|
-|visit_month | 患者の最初の訪問から相対的に見た、訪問の月。|
-|patient_id | 患者のIDコード。|
-|updrs_[1-4] | 統一パーキンソン病評価尺度のパートNに対する患者のスコア。数値が高いほど症状が重いことを示す。パート1では気分や行動、パート3では運動機能など、各サブセクションは症状の異なるカテゴリーをカバーしています。|
-|upd23b_clinical_state_on_medication | UPDRS評価時にレボドパなどの薬物を服用していたかどうか。主にパート3（運動機能）のスコアに影響を及ぼすと予想される。これらの薬はかなり早く（1日単位で）切れるので、患者は1ヶ月に2回、薬の服用と未服用の両方で運動機能検査を受けることが一般的です。|
-
-### supplemental_clinical_data.csv 
-- CSF サンプルが添付されていない臨床記録。このデータは、パーキンソン病の典型的な進行に関する追加的な文脈を提供することを意図している。train_clinical_data.csvと同じカラムを使用する。
-
-### example_test_files/ 
-APIがどのように機能するかを説明するためのデータ。APIが提供するカラムと同じカラムが含まれます（つまり、更新カラムはありません）。
-
-### amp_pd_peptide/ 
-APIを有効にするためのファイルです。APIは、5分以内にすべてのデータ（1,000人未満の追加患者）を配信し、0.5GB未満のメモリを確保することを期待します。APIが提供する簡単なデモは、こちらでご覧いただけます。
-
-### public_timeseries_testing_util.py 
-カスタムオフラインAPIテストの実行を容易にすることを目的としたオプションファイルです。詳細はスクリプトのdocstringを参照してください。
 
 
 ## 参考
 |notebook|説明|
 |---|---|
 |[AMP® - PDPP - Baseline](https://www.kaggle.com/code/fmotch/amp-pdpp-baseline)|ベースライン（仮）|
-|[AMP - EDA + Models](https://www.kaggle.com/code/craigmthomas/amp-eda-models)|EDA一番Vote多い|
-|[AMP - EDA + Models 日本語訳&コード解説](https://www.kaggle.com/code/ihorin/amp-eda-models)|上記の日本語翻訳版|
-|[AMP® - PDPP - EDA](https://www.kaggle.com/code/gunesevitan/amp-pdpp-eda)|EDA それぞれのタンパク質ごとに分析実施
-|[Explain Dataset, Test API, Cross-Validation Tips](https://www.kaggle.com/code/vitalykudelya/explain-dataset-test-api-cross-validation-tips)|参考情報多数
-|[How many Patients are in the Test Part? We have an answer...](https://www.kaggle.com/competitions/amp-parkinsons-disease-progression-prediction/discussion/398758)|PLでのテスト方法記載。PLでのスコアは実際には50人程度の人数。なのであまり当てにならない。いいモデルを作ればShakeupするだろうとのこと
-|[Parkinson's Disease MDS-UPDRS End-to-End Baseline](https://www.kaggle.com/code/gokifujiya/parkinson-s-disease-mds-updrs-end-to-end-baseline#Import-Libraries)|TrainデータとテストデータとしてClinicとProteinデータをPivotで作成（UPDRS1~4をそれぞれ別ファイルで扱う）。タンパク質の特徴量選択はSelectKSelectKBestで、最適なものを5つ抽出し、線形回帰している。|
-|[Parkinson's Disease MDS-UPDRS Features Selection](https://www.kaggle.com/code/gokifujiya/parkinson-s-disease-mds-updrs-features-selection#Random-Forest-Regressor-Model-with-Univariate-Feature-Selection-and-PCA)|上記参考に複数のモデル作成。特徴量選択に焦点を当てている。|
+|||
+|||
 
 ## NOTE
 |notebook|score|説明|
 |---|---|---|
-|kg-nb_PDPP_001|56.3|[AMP® - PDPP - Baseline]そのまま|
+|kg-nb_ICR_001|0.23|[ICR IARC EDA_Ensemble and Stacking baseline](https://www.kaggle.com/code/tetsutani/icr-iarc-eda-ensemble-and-stacking-baseline) をコピーして作成|
 |kg-nb_PDPP_002|56.3|001ベース、中身の説明追加|
-|kg-nb_PDPP_003| |[Parkinson's Disease MDS-UPDRS Features Selection]ベースで作成|
-|kg-nb_PDPP_004| 57.2|[[Update: 57.4] Train + Inference RandomForest](https://www.kaggle.com/code/bibanh/update-57-4-train-inference-randomforest)ベースで作成。TrainセットはFirst Visitのみ。（０Visit)
-|kg-nb_PDPP_005| 57.2|[[Update: 57.4] Train + Inference RandomForest](https://www.kaggle.com/code/bibanh/update-57-4-train-inference-randomforest)NB004と同じだが説明を追記している（０Visit)
-|kg-nb_PDPP_006| 57.2|[[Update: 57.4] Train + Inference RandomForest](https://www.kaggle.com/code/bibanh/update-57-4-train-inference-randomforest)NB0041|
-|kg-nb_PDPP_007| 57.9|005ベースにXGboostを追加|
+
 
 
 
 ## LOG
-### 20230409
-- 初サブ
-  - ベースライン（仮）として以下ノートブックをそのまま提出
-  - [AMP® - PDPP - Baseline](https://www.kaggle.com/code/fmotch/amp-pdpp-baseline)
+### 20230527
+- Join!
+	- 題材としては健康状態を、いくつかの指標を用いて２値分類するテーブルコンペ。
+	- データ自自体は多くない
 
+### 20230529
+- [ICR IARC EDA| Ensemble and Stacking baseline](https://www.kaggle.com/code/tetsutani/icr-iarc-eda-ensemble-and-stacking-baseline) を参考にkg-nb-ICR-001を作成
+- 中身の確認、基本的には以下のような流れ
+	- モデル作成
+	- スタッキング
+
+### 20230530
+- kg-nbICR-001
+	- 欠損値を可視化、基本的には欠損はなさそうだが、BQとELは60程度の欠損値がある
 
