@@ -180,13 +180,13 @@ ID,class_0,class_1
 		-   **Yeo-Johnson Transformation** -variation of Box-Cox transformation, but without restrictions concerning numbers.
 	 - 結果としては  **Yeo-Johnson Transformation** が最も適している特徴量が多い
 >Tree Based modelを使用する場合はスケーリングを気にする必要はすくないが、SVMなどを用いる場合は必要、今後Tree model以外を使用する場合は参考にする`
-<br>
 - 特徴量の中でうまいことスケーリングできないやつの中身を確認
 	-  `AR`, `BZ`, `DV` 
 		- ほとんど同じ値かつ、大きな外れ値がある
 		- 他のいくつかの特徴量と相関がある -> 削除することもあり？
 	 - `AY`, `DF`　に関しても同様だけど他の特徴量との相関が薄い -> 削除は微妙
 	 - `AR`, `BZ`, `DV` 削除した上でCVを比較すると`BZ`, `DV`それぞれ単体で削除するとCVの向上が見られた
+
 |drop column|n_reapts=7_CV|n_reapts=10_CV|
 |----|----|----|
 |CL, BC, AR, BZ, DV|0.18666 ± 0.07729||
