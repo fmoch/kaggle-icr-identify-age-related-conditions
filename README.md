@@ -83,7 +83,7 @@ ID,class_0,class_1
 |---|---|
 |[ICR IARC EDA Ensemble and Stacking baseline](https://www.kaggle.com/code/tetsutani/icr-iarc-eda-ensemble-and-stacking-baseline)|ベースライン（仮）|
 |[ICR - EDA & Balanced Learning with LGBM & XGB](https://www.kaggle.com/code/mateuszk013/icr-eda-balanced-learning-with-lgbm-xgb)|EDA参考|
-|||
+|[icr-identify-age](https://www.kaggle.com/code/vadimkamaev/icr-identify-age)|Tabpfnを用いたノート, LB上位 (0.11)はこのTabPFN使用している|
 
 ## NOTE
 ### nb
@@ -98,6 +98,7 @@ ID,class_0,class_1
 |kg-nb_ICR_exp_001|0.23|kg-nb_ICR_001をベースに、EDA用のノートブック作成|
 |kg-nb_ICR_exp_002|56.3|001ベース、中身の説明追加|
 |kg-nb_ICR_exp_003|56.3|001ベース、drop column変更, EDA削除|
+|kg-nb_ICR_exp_004|56.3|[icr-identify-age](https://www.kaggle.com/code/vadimkamaev/icr-identify-age) をコピーして作成, |
 
 
 ## LOG
@@ -178,5 +179,40 @@ ID,class_0,class_1
 		-   **Box-Cox Transformation** - used when data is skewed or has outliers. Requires strictly positive numbers.
 		-   **Yeo-Johnson Transformation** -variation of Box-Cox transformation, but without restrictions concerning numbers.
 	 - 結果としては  **Yeo-Johnson Transformation** が最も適している特徴量が多い
-	 ` Tree Based modelを使用する場合はスケーリングを気にする必要はすくないが、SVMなどを用いる場合は必要、今後Tree model以外を使用する場合は参考にする`
+>Tree Based modelを使用する場合はスケーリングを気にする必要はすくないが、SVMなどを用いる場合は必要、今後Tree model以外を使用する場合は参考にする`
+<br>
+- 特徴量の中でうまいことスケーリングできないやつの中身を確認
+	-  `AR`, `BZ`, `DV` 
+		- ほとんど同じ値かつ、大きな外れ値がある
+		- 他のいくつかの特徴量と相関がある -> 削除することもあり？
+	 - `AY`, `DF`　に関しても同様だけど他の特徴量との相関が薄い -> 削除は微妙
+	 - `AR`, `BZ`, `DV` 削除した上でCVを比較すると`BZ`, `DV`それぞれ単体で削除するとCVの向上が見られた
+|drop column|n_reapts=7_CV|n_reapts=10_CV|
+|----|----|----|
+|CL, BC, AR, BZ, DV|0.18666 ± 0.07729||
+|CL, BC, BZ, DV|0.18137 ± 0.07311||
+|CL, BC, AR|0.18292 ± 0.07210||
+|CL, BC, BZ|0.17243 ± 0.07241|0.18326 ± 0.06861|
+|CL, BC, DV|0.17438 ± 0.07019||
 
+- 以下、特徴量とClassのピアソン相関係数
+>これらはCassとの相関が小さいためBinalizationするのも有効
+
+|drop column|n_reapts=3_CV|
+|----|----|
+|AH|	 +0.045|
+|AR|	 +0.064|
+|AY|	 +0.082|
+|BC|	 +0.156|
+|BZ|	 +0.112|
+|CL|	 +0.017|
+|DF|	 +0.064|
+|DV|	 +0.015|
+|EP|	 -0.068|
+|GE|     -0.071|
+|Class|	 +1.000|
+
+- t-SNEを用いたクラスタリングも実施している
+	- `Class=1`は2D及び3Dでみてもそれぞれクラスターを形成している -> 何かしらストーリはあるはず
+
+- Dropする列でFor回す関数を作成すれば捗りそう…
