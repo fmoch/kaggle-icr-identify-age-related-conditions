@@ -81,21 +81,27 @@ ID,class_0,class_1
 ## 参考
 |notebook|説明|
 |---|---|
-|[AMP® - PDPP - Baseline](https://www.kaggle.com/code/fmotch/amp-pdpp-baseline)|ベースライン（仮）|
-|||
+|[ICR IARC EDA Ensemble and Stacking baseline](https://www.kaggle.com/code/tetsutani/icr-iarc-eda-ensemble-and-stacking-baseline)|ベースライン（仮）|
+|[ICR - EDA & Balanced Learning with LGBM & XGB](https://www.kaggle.com/code/mateuszk013/icr-eda-balanced-learning-with-lgbm-xgb)|EDA参考|
 |||
 
 ## NOTE
+### nb
+|notebook|CV|PV|説明|
+|---|---|---|---|
+|kg-nb_ICR_001|0.13968 ± 0.08848|0.28|[ICR IARC EDA_Ensemble and Stacking baseline](https://www.kaggle.com/code/tetsutani/icr-iarc-eda-ensemble-and-stacking-baseline) をコピーして作成|
+|kg-nb_ICR_002|56.3||001ベース、中身の説明追加|
+
+### EXP
 |notebook|score|説明|
 |---|---|---|
-|kg-nb_ICR_001|0.23|[ICR IARC EDA_Ensemble and Stacking baseline](https://www.kaggle.com/code/tetsutani/icr-iarc-eda-ensemble-and-stacking-baseline) をコピーして作成|
-|kg-nb_PDPP_002|56.3|001ベース、中身の説明追加|
-
-
+|kg-nb_ICR_exp_001|0.23|kg-nb_ICR_001をベースに、EDA用のノートブック作成|
+|kg-nb_ICR_exp_002|56.3|001ベース、中身の説明追加|
+|kg-nb_ICR_exp_003|56.3|001ベース、drop column変更, EDA削除|
 
 
 ## LOG
-### 20230527
+### 20230527ß
 - Join!
 	- 題材としては健康状態を、いくつかの指標を用いて２値分類するテーブルコンペ。
 	- データ自自体は多くない
@@ -109,4 +115,68 @@ ID,class_0,class_1
 ### 20230530
 - kg-nbICR-001
 	- 欠損値を可視化、基本的には欠損はなさそうだが、BQとELは60程度の欠損値がある
+
+### 20230601
+- kg-nbICR-001
+	- ベースモデルまで写経
+	- Opunutaを用いてパラメータ最適化を行っているが、一旦この部分は後回し
+- 以下本モデルないで使用しているベースモデル
+- XGBoost
+    - CPUまたはGPUを引数で指定可能
+- LightGBM
+    - Modelとしては3つのパラメータ違いを設定している
+- CatBoost
+- HistGradientBoosting
+> 	- GradientBoostingTreeはヒストグラムベースの勾配ブースティング分類ツリーアルゴリズムです。この実装はMicrosoftのLightGBMに基づいており、並列化にOpenMPを利用しています。
+> 	- 大きなデータセット（n_samples> = 10000）の場合はGradientBoostingClassifierよりもはるかに高速です。
+> 	- この推定器は、欠測値（NaN）でも学習できます。Scikit-Learnのv0.21.1以降では、HistGradientBoostingを利用できます。
+
+### 20230605
+- EDA用に`kg-nb_ICR_001`をベースに`kg-nb_ICR_exp_001`を作成
+- DiscussにてCVとPBスコアの相関を集計していた
+	-　
+- 欠損値に関して以下Dで述べられている
+	- [Do not worry about data points with missing values](https://www.kaggle.com/competitions/icr-identify-age-related-conditions/discussion/410843)
+	- t-SNEを用いて1と0を次元削減して2次元上にプロットしクラスタリング、lgbでの予測結果をもとにした絶対誤差を色付け
+	- 欠損値だけを抽出して絶対誤差を見ると、他の値と大差ない -> 欠損値そこまで影響なし
+	- この人は平均値で欠損補完しているが、中央値のほうが良いかもしれない
+
+### 20230606
+- ローカルで”kg-nbICR-001”を実行したところHistGradientBoostingClassifierの引数でエラー
+	- class_weight=balanced に対応していない -> sklearnアップデートで解消
+
+### 20230607
+- `kg-nb_ICR_exp_001`  -> `n_splits=4` `n_reapts=3`
+	- 1st : 0.19868 ± 0.06894
+	- 2nd : 0.19868 ± 0.06894
+	- 3rd : 0.19868 ± 0.06894
+
+### 20230609
+- `kg-nb_ICR_exp_001` -> `kg-nb_ICR_exp_003`
+- もともと`BC` と `CL` それぞれ有無でのCV確認
+- そもそも各特徴量の相関を見た場合、となっており、BC及びCLは特徴量削減を行ったほうが良いという考え
+	- **`BZ` vs `BC` (0.91)**
+	- **`DV` vs `CL` (0.95)** 
+	- **`EH` vs `FD` (0.97)**
+- random_state_listsを7個にするとCL,BC除いたデータの優位性あり
+|drop column|n_reapts=3_CV|n_reapts=7_CV|
+|----|----|---|
+|CL, BC|0.19868 ± 0.06894|**0.18587 ± 0.07086**|
+|CL|0.18195 ± 0.07915 |0.19023 ± 0.07402|
+|BC|0.18252 ± 0.07493|0.19101 ± 0.07822|
+|None|0.19250 ± 0.07822|0.19023 ± 0.07402|
+
+### 20230610
+- [ICR - EDA & Balanced Learning with LGBM & XGB](https://www.kaggle.com/code/mateuszk013/icr-eda-balanced-learning-with-lgbm-xgb) を参考に特徴量エンジニアリング
+- 上記でも書いているがまずは王道に各特徴量の相関を確認
+- KDE（カーネル密度分布）では正規分布的な広がりを見せているか、裾が長いか（LongTail)かを確認　-> 特徴量ごとで異なる
+	- 上記の分布に対してスケーリング方法を検討するに当たって以下、スケーラーごとに正規分布度を比較している（直線的な右上がりになればなるほどｍ正規分布に従っている
+		-  **Log Transformation** - generally works fine with right-skewed data. Requires non-negative numbers.
+		-   **Square Root Transformation** - similarly to log-level transformation. Requires non-negative numbers.
+		-   **Square Transformation** - helps to reduce left-skewed data.
+		-   **Reciprocal Transformation** - used sometimes, when data is skewed, or there are obvious outliers. Not defined at zero.
+		-   **Box-Cox Transformation** - used when data is skewed or has outliers. Requires strictly positive numbers.
+		-   **Yeo-Johnson Transformation** -variation of Box-Cox transformation, but without restrictions concerning numbers.
+	 - 結果としては  **Yeo-Johnson Transformation** が最も適している特徴量が多い
+	 ` Tree Based modelを使用する場合はスケーリングを気にする必要はすくないが、SVMなどを用いる場合は必要、今後Tree model以外を使用する場合は参考にする`
 
