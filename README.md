@@ -179,7 +179,11 @@ ID,class_0,class_1
 		-   **Box-Cox Transformation** - used when data is skewed or has outliers. Requires strictly positive numbers.
 		-   **Yeo-Johnson Transformation** -variation of Box-Cox transformation, but without restrictions concerning numbers.
 	 - 結果としては  **Yeo-Johnson Transformation** が最も適している特徴量が多い
->Tree Based modelを使用する場合はスケーリングを気にする必要はすくないが、SVMなどを用いる場合は必要、今後Tree model以外を使用する場合は参考にする`
+~~~
+Tree Based modelを使用する場合はスケーリングを気にする必要はすくないが、
+SVMなどを用いる場合は必要、今後Tree model以外を使用する場合は参考にする
+~~~
+
 - 特徴量の中でうまいことスケーリングできないやつの中身を確認
 	-  `AR`, `BZ`, `DV` 
 		- ほとんど同じ値かつ、大きな外れ値がある
@@ -196,7 +200,9 @@ ID,class_0,class_1
 |CL, BC, DV|0.17438 ± 0.07019||
 
 - 以下、特徴量とClassのピアソン相関係数
->これらはCassとの相関が小さいためBinalizationするのも有効
+~~~
+これらはCassとの相関が小さいためBinalizationするのも有効
+~~~
 
 |drop column|n_reapts=3_CV|
 |----|----|
@@ -213,6 +219,7 @@ ID,class_0,class_1
 |Class|	 +1.000|
 
 - t-SNEを用いたクラスタリングも実施している
-	- `Class=1`は2D及び3Dでみてもそれぞれクラスターを形成している -> 何かしらストーリはあるはず
+	- `Class=1`は2D及び3Dでみてもそれぞれクラスターを形成している
+	  -> 何かしらストーリはあるはず
 
 - Dropする列でFor回す関数を作成すれば捗りそう…
