@@ -195,7 +195,7 @@ SVMなどを用いる場合は必要、今後Tree model以外を使用する場�
 |drop column|n_reapts=7_CV|n_reapts=10_CV|
 |----|----|----|
 |CL, BC, AR, BZ, DV|0.18666 ± 0.07729||
-|CL, BC, BZ, DV|0.18137 ± 0.07311||
+|CL, BC, BZ, DV|0.18137 ± 0.07311|0.18625 ± 0.06379|
 |CL, BC, AR|0.18292 ± 0.07210||
 |CL, BC, BZ|0.17243 ± 0.07241|0.18326 ± 0.06861|
 |CL, BC, DV|0.17438 ± 0.07019||
@@ -236,18 +236,29 @@ SVMなどを用いる場合は必要、今後Tree model以外を使用する場�
 - `kg-nb_ICR_exp_003` サブ
 	- CV：0.18385 ± 0.06902
 	- LB：0.40
-		- `drop_cols =['BC', 'CL','BZ']`
-		- kfold = 'skf'
-		- n_splits = 4
-		- n_reapts = 20
-		- random_state = 71
-		- n_estimators = 99999
-		- early_stopping_rounds = 1000
-		- verbose = False
-		- device = 'cpu'
+		- `drop_cols` =['BC', 'CL','BZ']
+		- `kfold` = 'skf'
+		- `n_splits` = 4
+		- `n_reapts` = 20
+		- `random_state` = 71
+		- `n_estimators` = 99999
+		- `early_stopping_rounds` = 1000
+		- `verbose` = False
+		- `device` = 'cpu'
 	 - LBは悪化しているが、より汎化したと考えるべき？？
 	 - 少量データ過ぎて逆に難しい
 
 ### 20230613
 -  `kg-nb_ICR_exp_003`  -> `kg-nb_ICR_exp_005`
+	- `drop_cols` =['BC', 'CL','BZ','DV']
 
+-　[Binary classification VS multi label(using Alpha in greeks)](https://www.kaggle.com/competitions/icr-identify-age-related-conditions/discussion/413287)
+	- マルチラベル分類か二項分類どちらが優れているか->二項分類
+	- Greeksを用いると概ねスコアアップが期待できるが、Alphaがオーバーフィットを催すかも
+
+- [lightgbmで二値分類の一連の流れをしたメモ](https://qiita.com/d_desuyon/items/807e01311ad08570ee78)
+	- 参考にLightgbmでのbinary classifier実装把握
+
+### 20230614
+-  `kg-nb_ICR_exp_005` ver2
+	- `drop_cols` =['BC', 'CL','BZ','DV','AR]
