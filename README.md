@@ -99,8 +99,11 @@ ID,class_0,class_1
 |kg-nb_ICR_exp_002|-|-|飛び番号|
 |kg-nb_ICR_exp_003|0.18385 ± 0.06902|0.40|001ベース、drop column変更, EDA削除|
 |kg-nb_ICR_exp_004|||[icr-identify-age](https://www.kaggle.com/code/vadimkamaev/icr-identify-age) をコピーして作成, |
-|kg-nb_ICR_exp_005|||003ベース|
-
+|kg-nb_ICR_exp_005_ver1|||003ベース, `drop_cols` =['BC', 'CL','BZ','DV']|
+|kg-nb_ICR_exp_005_ver2||| `drop_cols` =['BC', 'CL','BZ','DV','AR]|
+|kg-nb_ICR_exp_005_ver3|||ver2の設定のままearly_stopping_rounds = 1000 -> 10000,Early_stoppingに伴うオーバーフットを検証
+|
+early_stopping_rounds = 100000|
 
 ## LOG
 ### 20230527ß
@@ -262,3 +265,15 @@ SVMなどを用いる場合は必要、今後Tree model以外を使用する場�
 ### 20230614
 -  `kg-nb_ICR_exp_005` ver2
 	- `drop_cols` =['BC', 'CL','BZ','DV','AR]
+- Versionで管理することにしました
+
+-  Robust Validationに関する内容のNote
+	- https://www.kaggle.com/competitions/icr-identify-age-related-conditions/discussion/412911
+
+### 202030617
+- `kg-nb_ICR_exp_005_ver3`
+	- 以下ノート参考にモデル変更
+		- https://www.kaggle.com/competitions/icr-identify-age-related-conditions/discussion/417838
+	- ver2の設定のままearly_stopping_rounds = 1000 -> 10000,
+	- Early_stoppingに伴うオーバーフットを検証
+
