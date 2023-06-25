@@ -276,4 +276,8 @@ SVMなどを用いる場合は必要、今後Tree model以外を使用する場�
 		- https://www.kaggle.com/competitions/icr-identify-age-related-conditions/discussion/417838
 	- ver2の設定のままearly_stopping_rounds = 1000 -> 10000,
 	- Early_stoppingに伴うオーバーフットを検証
+### 20230625
+- 諸々取り組んでいるが、データ数の少なさがゆえになんともやりづらい
+	- 一旦本コンペをおいておいてPyTorchの勉強を行うことにする（PyTorch実践入門）
+
 
