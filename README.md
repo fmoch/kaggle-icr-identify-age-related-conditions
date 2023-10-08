@@ -1,12 +1,12 @@
 # kaggle-icr-identify-age-related-conditions
 icr-identify-age-related-conditionsコンペのリポジトリ
 
-  
+![leaderboad_last](https://github.com/fmoch/kaggle-icr-identify-age-related-conditions/assets/116940479/b7c3bf9b-b388-4d9a-9fb1-05e7b00664b7)
 - result
-	- public: ●● 
-		- rank: ●●/●●
-	- private: ●●
-		- rank: ●●/●●
+	- public: 0.23311
+		- rank: 3260/6431
+	- private: **0.44548**
+		- rank: 983/6431
 
 ## Overview
 ### 競技の目的
@@ -280,4 +280,6 @@ SVMなどを用いる場合は必要、今後Tree model以外を使用する場�
 - 諸々取り組んでいるが、データ数の少なさがゆえになんともやりづらい
 	- 一旦本コンペをおいておいてPyTorchの勉強を行うことにする（PyTorch実践入門）
 
-
+### 2023811
+- PyTorch実践入門 第１章が終わる頃、コンペも期限が訪れた
+- 結果として
