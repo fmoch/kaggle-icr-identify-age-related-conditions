@@ -10,7 +10,7 @@ icr-identify-age-related-conditionsコンペのリポジトリ
 		- rank: 3260/6431
 	- private: **0.44548**
 		- rank: 983/6431
-  <img src="https://github.com/fmoch/kaggle-icr-identify-age-related-conditions/assets/116940479/ecf6361c-973b-4384-be9d-7b493c82aa67" width="70%">
+  <img src="https://github.com/fmoch/kaggle-icr-identify-age-related-conditions/assets/116940479/ecf6361c-973b-4384-be9d-7b493c82aa67" width="50%">
 
 ## Overview
 ### 競技の目的
