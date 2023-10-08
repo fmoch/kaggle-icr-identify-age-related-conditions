@@ -283,5 +283,5 @@ SVMなどを用いる場合は必要、今後Tree model以外を使用する場�
 ### 2023811
 - PyTorch実践入門 第１章が終わる頃、コンペも期限が訪れた
 - 結果として以下NBで提出。
-- ![model_last](https://github.com/fmoch/kaggle-icr-identify-age-related-conditions/assets/116940479/00feb9b1-977e-4e28-a8fa-4736c50dfe73)
+- ![model_last](https://github.com/fmoch/kaggle-icr-identify-age-related-conditions/assets/116940479/f616daee-9d60-49f2-aaf4-b24a07124641)
 - 宝くじ感が強いコンペだったという印象。。
