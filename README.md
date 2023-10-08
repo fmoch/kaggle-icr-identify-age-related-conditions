@@ -1,7 +1,7 @@
 # kaggle-icr-identify-age-related-conditions
 icr-identify-age-related-conditionsコンペのリポジトリ
 
-![leaderboad_last](https://github.com/fmoch/kaggle-icr-identify-age-related-conditions/assets/116940479/b7c3bf9b-b388-4d9a-9fb1-05e7b00664b7)
+![leaderboad_last](https://github.com/fmoch/kaggle-icr-identify-age-related-conditions/assets/116940479/ecf6361c-973b-4384-be9d-7b493c82aa67)
 - result
 	- public: 0.23311
 		- rank: 3260/6431
